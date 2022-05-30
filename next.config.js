@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 
-import { PHASE_PRODUCTION_BUILD } from 'next/constants'
+const { PHASE_PRODUCTION_BUILD } = require('next/constants')
 
 module.exports = phase => {
   if (phase === PHASE_PRODUCTION_BUILD)
