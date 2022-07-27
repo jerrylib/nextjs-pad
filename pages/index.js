@@ -31,3 +31,5 @@ export default function View() {
         <Col span={24}>{FunctionArea}</Col>
       )}
     </Row>
+  );
+}
