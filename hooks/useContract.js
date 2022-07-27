@@ -1,20 +1,13 @@
 import React, { useState } from "react";
 import { Input, Button, Row, Col, Divider, Collapse, Tag } from "antd";
-import {
-  CheckCircleOutlined,
-  ClockCircleOutlined,
-  CloseCircleOutlined,
-  ExclamationCircleOutlined,
-  MinusCircleOutlined,
-  SyncOutlined,
-} from "@ant-design/icons";
+import { CheckCircleOutlined } from "@ant-design/icons";
 
 // === Utils === //
 import Web3 from "web3";
 import { get, isArray, isEmpty, map, reduce } from "lodash";
 
 // === Constants === //
-import { STRATEGY_ABI, IERC20_ABI, VAULT_ABI } from "../../abis/index";
+import { STRATEGY_ABI, IERC20_ABI, VAULT_ABI } from "../abis/index";
 
 const { TextArea } = Input;
 const { Panel } = Collapse;
@@ -135,7 +128,7 @@ const useContract = (
   };
 
   const InputArea = (
-    <Row gutter={[8, 8]}>
+    <Row key="InputArea" gutter={[8, 8]}>
       <Col span={24}>
         <Input
           placeholder="rpc url"
@@ -146,6 +139,7 @@ const useContract = (
           const { name, value } = item;
           return (
             <Tag
+              key={name}
               icon={value === rpc && <CheckCircleOutlined />}
               color={value === rpc ? "#f50" : "#2db7f5"}
               style={{ marginTop: "0.5rem", cursor: "pointer" }}
@@ -166,6 +160,7 @@ const useContract = (
           const { name, value } = item;
           return (
             <Tag
+              key={name}
               icon={value === address && <CheckCircleOutlined />}
               color={value === address ? "#f50" : "#2db7f5"}
               style={{ marginTop: "0.5rem", cursor: "pointer" }}
@@ -195,6 +190,7 @@ const useContract = (
           const { name, value } = item;
           return (
             <Tag
+              key={name}
               icon={value === abi && <CheckCircleOutlined />}
               color={value === abi ? "#f50" : "#2db7f5"}
               style={{ marginTop: "0.5rem", cursor: "pointer" }}
@@ -209,7 +205,7 @@ const useContract = (
   );
 
   const FunctionArea = (
-    <Collapse>
+    <Collapse key={"FunctionArea"}>
       {map(abiJson, (item, index) => {
         const { name, inputs, outputs, type, payable } = item;
         if (type !== "function") return;
@@ -219,32 +215,30 @@ const useContract = (
             key={index}
             collapsible={payable === true ? "disabled" : ""}
           >
-            <p>
-              <Button type="primary" onClick={() => functionCall(index)}>
-                call
-              </Button>
-            </p>
+            <Button type="primary" onClick={() => functionCall(index)}>
+              call
+            </Button>
             {!isEmpty(inputs) && <Divider orientation="left">Inputs</Divider>}
             {map(inputs, (inputItem) => {
               return (
-                <p>
-                  <Input
-                    placeholder={`${name}.${inputItem.name} (${inputItem.type})`}
-                    value={get(inputDatas, `${name}.${inputItem.name}`, "")}
-                    onChange={(v) =>
-                      setInputDatas({
-                        ...inputDatas,
-                        [`${name}.${inputItem.name}`]: v.target.value,
-                      })
-                    }
-                  />
-                </p>
+                <Input
+                  key={`${name}.${inputItem.name}`}
+                  style={{ marginTop: 8 }}
+                  placeholder={`${name}.${inputItem.name} (${inputItem.type})`}
+                  value={get(inputDatas, `${name}.${inputItem.name}`, "")}
+                  onChange={(v) =>
+                    setInputDatas({
+                      ...inputDatas,
+                      [`${name}.${inputItem.name}`]: v.target.value,
+                    })
+                  }
+                />
               );
             })}
             {!isEmpty(outputs) && <Divider orientation="left">Outputs</Divider>}
             {map(outputs, (outputItem, outputItemIndex) => {
               return (
-                <p>
+                <p key={outputItemIndex}>
                   {`${name}.[${outputItemIndex}] (${outputItem.type})`}=
                   <span style={{ color: "red" }}>
                     {get(outputDatas, `${name}.${outputItemIndex}`)}
@@ -257,15 +251,7 @@ const useContract = (
       })}
     </Collapse>
   );
-  return {
-    rpc,
-    abi,
-    address,
-    abiJson,
-    blockNumber,
-    InputArea,
-    FunctionArea,
-  };
+  return { rpc, abi, address, abiJson, blockNumber, InputArea, FunctionArea };
 };
 
 export default useContract;
