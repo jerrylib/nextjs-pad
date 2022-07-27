@@ -1,0 +1,9 @@
+.line {
+  display: flex;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ddd;
+}
+
+.text {
+  flex: 1;
+}
