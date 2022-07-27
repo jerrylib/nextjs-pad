@@ -14,14 +14,7 @@ export default function Home() {
       dataIndex: "name",
       key: "name",
       render: (text, record) => {
-        return (
-          <a
-            target="_blank"
-            href={`https://etherscan.io/address/${record.address}`}
-          >
-            {text}
-          </a>
-        );
+        return <span>{text}</span>;
       },
     },
     {
@@ -50,7 +43,6 @@ export default function Home() {
   useEffect(() => {
     const web3 = new Web3(ETH_PROVIDER);
     const vaultContract = new web3.eth.Contract(VAULT_ABI, VAULT_ADDRESS);
-    console.log("vaultContract.methods", vaultContract.methods);
     let strategiesTemp = [];
     vaultContract.methods
       .getStrategies()

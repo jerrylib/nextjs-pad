@@ -1,33 +1,35 @@
-import React from 'react'
-
-// === Utils === //
-import { useRequest } from '@umijs/hooks'
-import map from 'lodash/map'
+import React from "react";
+import { Row, Col } from "antd";
 
 // === Styles === //
-import styles from '../styles/Home.module.css'
-import Web3 from 'web3'
-import { VAULT_ABI } from '../abis'
+import { IERC20_ABI } from "../abis";
 
-const web3 = new Web3("https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161")
-const vaultContract = new web3.eth.Contract(VAULT_ABI, '0xd5C7A01E49ab534e31ABcf63bA5a394fF1E5EfAC')
-vaultContract.methods.getStrategies().call().then(console.log)
+// === Hooks === //
+import useContract from "./hooks/useContract";
 
-export default function Home () {
-  const resp = useRequest(() => fetch('/api/events').then(rs => rs.json()))
-  const { data, refresh } = resp
+const defaultRpc = "https://rpc.ankr.com/eth";
+const defaultContractAddress = "0xdAC17F958D2ee523a2206206994597C13D831ec7"; // 0x3416cF6C708Da44DB2624D63ea0AAef7113527C6
+const defaultBlockNumber = 15223492;
+const defaultAbi = JSON.stringify(IERC20_ABI);
+
+export default function View() {
+  const { InputArea, FunctionArea, abiJson } = useContract(
+    defaultRpc,
+    defaultContractAddress,
+    defaultBlockNumber,
+    defaultAbi
+  );
+
   return (
-    <div className={styles.container}>
-      {map(data, i => (
-        <p key={i._id}>
-          {i._id},{i.emails}
-        </p>
-      ))}
-      <button
-        onClick={() => fetch('/api/events', { method: 'POST' }).then(refresh)}
-      >
-        add
-      </button>
-    </div>
-  )
+    <Row gutter={[24, 24]} style={{ padding: 24 }}>
+      <Col span={24}>{InputArea}</Col>
+      {abiJson instanceof Error ? (
+        <Col span={24}>
+          <p style={{ color: "red" }}>abi解析失败！</p>
+        </Col>
+      ) : (
+        <Col span={24}>{FunctionArea}</Col>
+      )}
+    </Row>
+  );
 }
