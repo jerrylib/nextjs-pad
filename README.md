@@ -29,6 +29,9 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Vercel访问地址：<https://nextjs-pad.vercel.app/>
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Vercel地址：<https://vercel.com/jsbin/nextjs-pad>
+
+mongodb地址：<https://cloud.mongodb.com/v2/62949d4a616aad4827352eca#access>
+账号：jerrylib180505@gmail.com
