@@ -1,0 +1,7 @@
+export const WEB3_INIT = "WEB3_INIT";
+
+export const UPDATE_BLOCK_NUMBER = "UPDATE_BLOCK_NUMBER";
+
+export const LOAD_MORE = "LOAD_MORE";
+
+export const UPDATE_BLOCK_DETAIL = "UPDATE_BLOCK_DETAIL";
