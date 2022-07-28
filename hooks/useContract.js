@@ -103,28 +103,48 @@ const useContract = (
     if (isEmpty(abiItem)) return;
     const { name, inputs, outputs } = abiItem;
     const web3 = new Web3(rpc);
-    const vaultContract = new web3.eth.Contract(abiJson, address);
-    const nextParams = map(inputs, (inputItem) => {
-      return get(inputDatas, `${name}.${inputItem.name}`, "");
+    const nextParams = map(inputs, (i, inputItemIndex) => {
+      return get(inputDatas, `${name}.${inputItemIndex}`, "");
     });
-    vaultContract.methods[name](...nextParams)
-      .call(undefined, blockNumber)
-      .then((v) => {
-        let nextV = isArray(v) ? v : [v];
-        //TODO: output由于没有name字段，所以用下标去进行数据存储
-        const nextOutputDatas = reduce(
-          outputs,
-          (rs, outputItem, outputItemIndex) => {
-            rs[`${name}.${outputItemIndex}`] = nextV[outputItemIndex];
-            return rs;
-          },
-          {}
-        );
-        setOutputDatas({
-          ...outputDatas,
-          ...nextOutputDatas,
+    try {
+      const vaultContract = new web3.eth.Contract(abiJson, address);
+      vaultContract.methods[name](...nextParams)
+        .call(undefined, blockNumber)
+        .then((nextV) => {
+          const nextOutputDatas = reduce(
+            outputs,
+            (rs, outputItem, outputItemIndex) => {
+              if (
+                isEmpty(outputItem.name) ||
+                nextV[outputItem.name] === undefined
+              ) {
+                rs[`${name}.${outputItemIndex}`] = nextV;
+              } else {
+                rs[`${name}.${outputItemIndex}`] = nextV[outputItem.name];
+              }
+              return rs;
+            },
+            {}
+          );
+          setOutputDatas({
+            ...outputDatas,
+            ...nextOutputDatas,
+          });
         });
+    } catch (e) {
+      const nextOutputDatas = reduce(
+        outputs,
+        (rs, i, outputItemIndex) => {
+          rs[`${name}.${outputItemIndex}`] = e;
+          return rs;
+        },
+        {}
+      );
+      setOutputDatas({
+        ...outputDatas,
+        ...nextOutputDatas,
       });
+    }
   };
 
   const InputArea = (
@@ -219,17 +239,17 @@ const useContract = (
               call
             </Button>
             {!isEmpty(inputs) && <Divider orientation="left">Inputs</Divider>}
-            {map(inputs, (inputItem) => {
+            {map(inputs, (inputItem, inputItemIndex) => {
               return (
                 <Input
                   key={`${name}.${inputItem.name}`}
                   style={{ marginTop: 8 }}
                   placeholder={`${name}.${inputItem.name} (${inputItem.type})`}
-                  value={get(inputDatas, `${name}.${inputItem.name}`, "")}
+                  value={get(inputDatas, `${name}.${inputItemIndex}`, "")}
                   onChange={(v) =>
                     setInputDatas({
                       ...inputDatas,
-                      [`${name}.${inputItem.name}`]: v.target.value,
+                      [`${name}.${inputItemIndex}`]: v.target.value,
                     })
                   }
                 />
@@ -240,8 +260,8 @@ const useContract = (
               return (
                 <p key={outputItemIndex}>
                   {`${name}.[${outputItemIndex}] (${outputItem.type})`}=
-                  <span style={{ color: "red" }}>
-                    {get(outputDatas, `${name}.${outputItemIndex}`)}
+                  <span style={{ color: "red", wordBreak: "break-all" }}>
+                    {`${get(outputDatas, `${name}.${outputItemIndex}`, "")}`}
                   </span>
                 </p>
               );
