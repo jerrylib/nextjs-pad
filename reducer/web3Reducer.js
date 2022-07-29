@@ -43,6 +43,7 @@ export const ReducerContextProvider = (props) => {
         return {
           ...preState,
           blockNumber: payload,
+          blockList: [],
         };
       }
       case UPDATE_BLOCK_DETAIL: {
@@ -62,11 +63,11 @@ export const ReducerContextProvider = (props) => {
       case LOAD_MORE: {
         const startBlockNumber = isEmpty(preState.blockList)
           ? preState.blockNumber
-          : last(preState.blockList).id;
+          : last(preState.blockList).id - 1;
         const blockList = preState.blockList.concat(
           map(array, (i, index) => {
             return {
-              id: startBlockNumber - 1 - index,
+              id: startBlockNumber - index,
               isInit: false,
             };
           })

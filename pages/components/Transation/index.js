@@ -2,15 +2,19 @@ import React from "react";
 
 // === Components === //
 import { List, Skeleton } from "antd";
+import { CopyOutlined } from "@ant-design/icons";
 import {
   Approval,
   Transfer,
   Borrow,
   LendToStrategy,
+  Mint,
 } from "../../../constant/events";
 
 // === Utils === //
 import { get, map } from "lodash";
+import copy from "copy-to-clipboard";
+
 const oneLine = (text) => {
   return <p style={{ margin: 0 }}>{text}</p>;
 };
@@ -21,7 +25,7 @@ const Transation = (props) => {
 
   if (name === Approval) {
     const text = oneLine(
-      `from ${get(events, "[0].value")} to ${get(
+      `approve ${address} from ${get(events, "[0].value")} to ${get(
         events,
         "[1].value"
       )} amounts ${get(events, "[2].value")}`
@@ -30,12 +34,13 @@ const Transation = (props) => {
       <List.Item>
         <Skeleton avatar loading={false} active>
           <List.Item.Meta title={data.name} description={text} />
+          <CopyOutlined onClick={() => copy(JSON.stringify(data))} />
         </Skeleton>
       </List.Item>
     );
   }
   if (name === Transfer) {
-    const text = `from ${get(events, "[0].value")} to ${get(
+    const text = `transfer ${address} from ${get(events, "[0].value")} to ${get(
       events,
       "[1].value"
     )} amounts ${get(events, "[2].value")}`;
@@ -43,6 +48,7 @@ const Transation = (props) => {
       <List.Item>
         <Skeleton avatar loading={false} active>
           <List.Item.Meta title={data.name} description={text} />
+          <CopyOutlined onClick={() => copy(JSON.stringify(data))} />
         </Skeleton>
       </List.Item>
     );
@@ -63,12 +69,38 @@ const Transation = (props) => {
               }),
             ]}
           />
+          <CopyOutlined onClick={() => copy(JSON.stringify(data))} />
         </Skeleton>
       </List.Item>
     );
   }
+  if (name === Mint) {
+    const coins = get(events, "[1].value", []);
+    const amounts = get(events, "[2].value", []);
+    const text = `mint ${address} to ${get(
+      events,
+      "[0].value",
+      ""
+    )} mintAmount ${get(events, "[3].value", "")}`;
+    return (
+      <List.Item>
+        <Skeleton avatar loading={false} active>
+          <List.Item.Meta
+            title={data.name}
+            description={[
+              text,
+              ...map(coins, (c, i) => {
+                return oneLine(`deposit asset ${c} amounts ${amounts[i]}`);
+              }),
+            ]}
+          />
+          <CopyOutlined onClick={() => copy(JSON.stringify(data))} />
+        </Skeleton>
+      </List.Item>
+    );
+  }
+
   if (name === LendToStrategy) {
-    console.log("data=", data);
     const coins = get(events, "[1].value", []);
     const amounts = get(events, "[2].value", []);
     const text = `from ${address} lend to ${get(
@@ -88,13 +120,15 @@ const Transation = (props) => {
               }),
             ]}
           />
+          <CopyOutlined onClick={() => copy(JSON.stringify(data))} />
         </Skeleton>
       </List.Item>
     );
   }
   return (
     <List.Item>
-      Unsupport Event: {name} {JSON.stringify(data, undefined, 2)}
+      Unsupport Event: {name}{" "}
+      <CopyOutlined onClick={() => copy(JSON.stringify(data))} />
     </List.Item>
   );
 };

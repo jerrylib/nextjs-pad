@@ -12,7 +12,12 @@ import {
   Modal,
   List,
 } from "antd";
-import { CloudDownloadOutlined, CheckCircleOutlined } from "@ant-design/icons";
+import {
+  CloudDownloadOutlined,
+  CheckCircleOutlined,
+  SyncOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
 import { Transaction } from "./components";
 
 // === Reducer === //
@@ -64,6 +69,7 @@ const columns = [
   },
 ];
 function Scan() {
+  const [loading, setLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [rpc, setRpc] = useState("https://rpc-qa-sg.bankofchain.io");
   const { state, dispatch } = useContext(Web3Context);
@@ -75,12 +81,19 @@ function Scan() {
     currentHash,
   } = state;
   const fetchNewestBlockNumber = useCallback(() => {
+    setLoading(true);
     return web3Instance.eth
       .getBlockNumber()
       .catch(() => -1)
       .then((nextBlockNumber) => {
         dispatch({ type: UPDATE_BLOCK_NUMBER, payload: nextBlockNumber });
-      });
+      })
+      .finally(() =>
+        setTimeout(() => {
+          dispatch({ type: LOAD_MORE });
+          setLoading(false);
+        }, 1000)
+      );
   }, [web3Instance, dispatch]);
 
   useEffect(() => {
@@ -157,9 +170,14 @@ function Scan() {
       <Col span={24}>
         <p>
           The Newest Block Number:
-          <span style={{ fontWeight: "bold", marginLeft: "0.5rem" }}>
+          <span style={{ fontWeight: "bold", margin: "0 0.5rem" }}>
             {state.blockNumber}
           </span>
+          {loading ? (
+            <LoadingOutlined />
+          ) : (
+            <SyncOutlined onClick={fetchNewestBlockNumber} />
+          )}
         </p>
       </Col>
       <Col span={24}>
