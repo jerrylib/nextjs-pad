@@ -507,6 +507,14 @@
     lodash.throttle "^4.1.1"
     umi-request "^1.2.17"
 
+abi-decoder@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.npmmirror.com/abi-decoder/-/abi-decoder-2.4.0.tgz#99f72337c614d6ac45a28dbc83c08b44eba48ad5"
+  integrity sha512-TOLU2q1HgYOjs1GKGtVzaqrYkar6I2fT9a80rzx6/9EJ/5crb4nCGuro0grZayixem93T7omrajYmLiMkYDLDA==
+  dependencies:
+    web3-eth-abi "^1.2.1"
+    web3-utils "^1.2.1"
+
 accepts@~1.3.8:
   version "1.3.8"
   resolved "https://registry.npmmirror.com/accepts/-/accepts-1.3.8.tgz#0bf0be125b67014adcb0b0921e62db7bffe16b2e"
@@ -4434,6 +4442,13 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
+web3-abi-coder@^1.1.6:
+  version "1.1.6"
+  resolved "https://registry.npmmirror.com/web3-abi-coder/-/web3-abi-coder-1.1.6.tgz#a3c8fd9445deeaf32281388242b8bc16a273cdab"
+  integrity sha512-7EkfuwScKKErSlsQX2PyHf4t7NjSE89SpH+3I8EjyBpDDS0S3gbP5aGzJUdPXmQ+h+ULX49yXwwnLgcjneSJvg==
+  dependencies:
+    "@ethersproject/abi" "^5.6.3"
+
 web3-bzz@1.7.4:
   version "1.7.4"
   resolved "https://registry.npmmirror.com/web3-bzz/-/web3-bzz-1.7.4.tgz#9419e606e38a9777443d4ce40506ebd796e06075"
@@ -4501,7 +4516,7 @@ web3-core@1.7.4:
     web3-core-requestmanager "1.7.4"
     web3-utils "1.7.4"
 
-web3-eth-abi@1.7.4:
+web3-eth-abi@1.7.4, web3-eth-abi@^1.2.1:
   version "1.7.4"
   resolved "https://registry.npmmirror.com/web3-eth-abi/-/web3-eth-abi-1.7.4.tgz#3fee967bafd67f06b99ceaddc47ab0970f2a614a"
   integrity sha512-eMZr8zgTbqyL9MCTCAvb67RbVyN5ZX7DvA0jbLOqRWCiw+KlJKTGnymKO6jPE8n5yjk4w01e165Qb11hTDwHgg==
@@ -4636,7 +4651,7 @@ web3-shh@1.7.4:
     web3-core-subscriptions "1.7.4"
     web3-net "1.7.4"
 
-web3-utils@1.7.4:
+web3-utils@1.7.4, web3-utils@^1.2.1:
   version "1.7.4"
   resolved "https://registry.npmmirror.com/web3-utils/-/web3-utils-1.7.4.tgz#eb6fa3706b058602747228234453811bbee017f5"
   integrity sha512-acBdm6Evd0TEZRnChM/MCvGsMwYKmSh7OaUfNf5OKG0CIeGWD/6gqLOWIwmwSnre/2WrA1nKGId5uW2e5EfluA==
