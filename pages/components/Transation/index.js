@@ -15,8 +15,13 @@ import {
 import { get, map } from "lodash";
 import copy from "copy-to-clipboard";
 
+let i = 0;
 const oneLine = (text) => {
-  return <p style={{ margin: 0 }}>{text}</p>;
+  return (
+    <span key={i++} style={{ display: "block" }}>
+      {text}
+    </span>
+  );
 };
 
 const Transation = (props) => {
@@ -40,10 +45,12 @@ const Transation = (props) => {
     );
   }
   if (name === Transfer) {
-    const text = `transfer ${address} from ${get(events, "[0].value")} to ${get(
-      events,
-      "[1].value"
-    )} amounts ${get(events, "[2].value")}`;
+    const text = oneLine(
+      `transfer ${address} from ${get(events, "[0].value")} to ${get(
+        events,
+        "[1].value"
+      )} amounts ${get(events, "[2].value")}`
+    );
     return (
       <List.Item>
         <Skeleton avatar loading={false} active>
@@ -56,7 +63,7 @@ const Transation = (props) => {
   if (name === Borrow) {
     const coins = get(events, "[0].value", []);
     const amounts = get(events, "[1].value", []);
-    const text = `borrow ${coins.length} coins from ${address}`;
+    const text = oneLine(`borrow ${coins.length} coins from ${address}`);
     return (
       <List.Item>
         <Skeleton avatar loading={false} active>
@@ -77,11 +84,13 @@ const Transation = (props) => {
   if (name === Mint) {
     const coins = get(events, "[1].value", []);
     const amounts = get(events, "[2].value", []);
-    const text = `mint ${address} to ${get(
-      events,
-      "[0].value",
-      ""
-    )} mintAmount ${get(events, "[3].value", "")}`;
+    const text = oneLine(
+      `mint ${address} to ${get(events, "[0].value", "")} mintAmount ${get(
+        events,
+        "[3].value",
+        ""
+      )}`
+    );
     return (
       <List.Item>
         <Skeleton avatar loading={false} active>
@@ -103,11 +112,13 @@ const Transation = (props) => {
   if (name === LendToStrategy) {
     const coins = get(events, "[1].value", []);
     const amounts = get(events, "[2].value", []);
-    const text = `from ${address} lend to ${get(
-      events,
-      "[0].value",
-      ""
-    )} lendValue ${get(events, "[3].value", "")}`;
+    const text = oneLine(
+      `from ${address} lend to ${get(events, "[0].value", "")} lendValue ${get(
+        events,
+        "[3].value",
+        ""
+      )}`
+    );
     return (
       <List.Item>
         <Skeleton avatar loading={false} active>
