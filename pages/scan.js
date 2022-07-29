@@ -18,7 +18,7 @@ import {
   SyncOutlined,
   LoadingOutlined,
 } from "@ant-design/icons";
-import { Transaction } from "./components";
+import { Transaction } from "../components";
 
 // === Reducer === //
 import { Web3Context } from "../reducer/web3Reducer";

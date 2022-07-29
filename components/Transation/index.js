@@ -9,7 +9,7 @@ import {
   Borrow,
   LendToStrategy,
   Mint,
-} from "../../../constant/events";
+} from "../../constant/events";
 
 // === Utils === //
 import { get, map } from "lodash";
