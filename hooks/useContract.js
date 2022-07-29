@@ -98,6 +98,18 @@ const useContract = (
     abiJson = new Error("abi转换失败");
   }
 
+  const fetchNewestBlockNumber = () => {
+    try {
+      const web3 = new Web3(new Web3.providers.HttpProvider(rpc));
+      web3.eth
+        .getBlockNumber()
+        .catch(() => -1)
+        .then(setBlockNumber);
+    } catch (error) {
+      setBlockNumber(-1);
+    }
+  };
+
   const functionCall = (index) => {
     const abiItem = abiJson[index];
     if (isEmpty(abiItem)) return;
@@ -161,7 +173,7 @@ const useContract = (
             <Tag
               key={name}
               icon={value === rpc && <CheckCircleOutlined />}
-              color={value === rpc ? "#f50" : "#2db7f5"}
+              color={value === rpc ? "#f50" : "#1890ff"}
               style={{ marginTop: "0.5rem", cursor: "pointer" }}
               onClick={() => setRpc(value)}
             >
@@ -182,7 +194,7 @@ const useContract = (
             <Tag
               key={name}
               icon={value === address && <CheckCircleOutlined />}
-              color={value === address ? "#f50" : "#2db7f5"}
+              color={value === address ? "#f50" : "#1890ff"}
               style={{ marginTop: "0.5rem", cursor: "pointer" }}
               onClick={() => setAddress(value)}
             >
@@ -197,6 +209,27 @@ const useContract = (
           value={blockNumber}
           onChange={(v) => setBlockNumber(v.target.value)}
         />
+        <Tag
+          color={"#1890ff"}
+          style={{ marginTop: "0.5rem", cursor: "pointer" }}
+          onClick={fetchNewestBlockNumber}
+        >
+          Newest Block
+        </Tag>
+        <Tag
+          color={"#1890ff"}
+          style={{ marginTop: "0.5rem", cursor: "pointer" }}
+          onClick={() => setBlockNumber(++blockNumber)}
+        >
+          + 1
+        </Tag>
+        <Tag
+          color={"#1890ff"}
+          style={{ marginTop: "0.5rem", cursor: "pointer" }}
+          onClick={() => setBlockNumber(--blockNumber)}
+        >
+          - 1
+        </Tag>
       </Col>
       <Col span={24}>
         <TextArea
@@ -212,7 +245,7 @@ const useContract = (
             <Tag
               key={name}
               icon={value === abi && <CheckCircleOutlined />}
-              color={value === abi ? "#f50" : "#2db7f5"}
+              color={value === abi ? "#f50" : "#1890ff"}
               style={{ marginTop: "0.5rem", cursor: "pointer" }}
               onClick={() => setAbi(value)}
             >

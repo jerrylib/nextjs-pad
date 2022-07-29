@@ -21,7 +21,7 @@ export default function Index() {
   );
 
   return (
-    <Row gutter={[24, 24]} style={{ padding: 24 }}>
+    <Row gutter={[12, 12]} style={{ padding: 24 }}>
       <Col span={24}>{InputArea}</Col>
       {abiJson instanceof Error ? (
         <Col span={24}>

@@ -1,8 +1,24 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
 
 // === Components === //
-import { Button, Collapse, Table, Space, Row, Col, Input } from "antd";
-import { CloudDownloadOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Collapse,
+  Table,
+  Space,
+  Row,
+  Col,
+  Input,
+  Modal,
+  List,
+} from "antd";
+import {
+  CloudDownloadOutlined,
+  CheckCircleOutlined,
+  SyncOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
+import { Transaction } from "../components";
 
 // === Reducer === //
 import { Web3Context } from "../reducer/web3Reducer";
@@ -11,12 +27,14 @@ import {
   UPDATE_BLOCK_NUMBER,
   LOAD_MORE,
   UPDATE_BLOCK_DETAIL,
+  UPDATE_HASH_DETAIL,
 } from "../reducer/actions";
 
 // === Utils === //
 import map from "lodash/map";
-
 import isEmpty from "lodash/isEmpty";
+import { decodeLogs } from "./../utils/decode-util";
+import { find, get } from "lodash";
 
 const { Panel } = Collapse;
 
@@ -38,31 +56,44 @@ const columns = [
     key: "from",
   },
   {
-    title: "Remark",
-    dataIndex: "transactionIndex",
-    key: "transactionIndex",
+    title: "Loaded",
+    dataIndex: "decodeData",
+    key: "decodeData",
     render: (v) => {
-      return (
-        <Space>
-          <Button type="link" size="small">
-            Detail
-          </Button>
-        </Space>
+      return v === undefined ? (
+        <CloudDownloadOutlined />
+      ) : (
+        <CheckCircleOutlined />
       );
     },
   },
 ];
 function Scan() {
-  const [rpc, setRpc] = useState("https://rpc-stage-sg.bankofchain.io");
+  const [loading, setLoading] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [rpc, setRpc] = useState("https://rpc-qa-sg.bankofchain.io");
   const { state, dispatch } = useContext(Web3Context);
-  const { web3Instance, blockList } = state;
+  const {
+    web3Instance,
+    blockList = [],
+    blockNumber,
+    currentBlock,
+    currentHash,
+  } = state;
   const fetchNewestBlockNumber = useCallback(() => {
+    setLoading(true);
     return web3Instance.eth
       .getBlockNumber()
       .catch(() => -1)
       .then((nextBlockNumber) => {
         dispatch({ type: UPDATE_BLOCK_NUMBER, payload: nextBlockNumber });
-      });
+      })
+      .finally(() =>
+        setTimeout(() => {
+          dispatch({ type: LOAD_MORE });
+          setLoading(false);
+        }, 1000)
+      );
   }, [web3Instance, dispatch]);
 
   useEffect(() => {
@@ -84,9 +115,9 @@ function Scan() {
   };
 
   const loadDetail = async (blockNumber = 0) => {
-    if (blockNumber <= 0) return;
+    if (blockNumber <= 0 || blockNumber === NaN) return;
     const details = await web3Instance.eth
-      .getBlock(blockNumber)
+      .getBlock(`${blockNumber}`)
       .then((blockDetail) => {
         const { transactions } = blockDetail;
         const transactionRequestArray = map(
@@ -100,7 +131,33 @@ function Scan() {
       payload: { id: blockNumber, isInit: true, details },
     });
   };
+
+  const loadTransactionDetails = async (blockNumber, transactionHash) => {
+    Promise.all([
+      web3Instance.eth.getTransaction(transactionHash),
+      web3Instance.eth.getTransactionReceipt(transactionHash),
+    ])
+      .then((resp) => {
+        const [a, r, ...x] = resp;
+        const nextData = decodeLogs(resp[1]);
+        dispatch({
+          type: UPDATE_HASH_DETAIL,
+          payload: {
+            id: blockNumber,
+            hash: transactionHash,
+            decodeData: nextData,
+          },
+        });
+      })
+      .then(() => setOpenModal(true));
+  };
   console.log("state, dispatch=", state);
+
+  const currentBlockItem = find(blockList, { id: currentBlock });
+  const currentTransationItem = find(currentBlockItem?.details, {
+    hash: currentHash,
+  });
+  console.log("currentTransationItem=", currentTransationItem);
   return (
     <Row gutter={[12, 12]} style={{ padding: 24 }}>
       <Col span={24}>
@@ -113,13 +170,22 @@ function Scan() {
       <Col span={24}>
         <p>
           The Newest Block Number:
-          <span style={{ fontWeight: "bold", marginLeft: "0.5rem" }}>
+          <span style={{ fontWeight: "bold", margin: "0 0.5rem" }}>
             {state.blockNumber}
           </span>
+          {loading ? (
+            <LoadingOutlined />
+          ) : (
+            <SyncOutlined onClick={fetchNewestBlockNumber} />
+          )}
         </p>
       </Col>
       <Col span={24}>
-        <Collapse accordion onChange={loadDetail}>
+        <Collapse
+          accordion
+          activeKey={currentBlock}
+          onChange={(v) => loadDetail(1 * v)}
+        >
           {map(blockList, (blockItem) => {
             const { id, details, isInit } = blockItem;
             return (
@@ -136,18 +202,62 @@ function Scan() {
                   rowKey={(record) => record.transactionIndex}
                   size="small"
                   dataSource={details}
-                  columns={columns}
+                  columns={[
+                    ...columns,
+                    {
+                      title: "Remark",
+                      dataIndex: "hash",
+                      key: "hash",
+                      render: (v) => {
+                        return (
+                          <Space>
+                            <Button
+                              type="link"
+                              size="small"
+                              onClick={() => loadTransactionDetails(id, v)}
+                            >
+                              Detail
+                            </Button>
+                          </Space>
+                        );
+                      },
+                    },
+                  ]}
                 />
               </Panel>
             );
           })}
         </Collapse>
       </Col>
-      <Col span={24}>
-        <Button type="primary" style={{ width: "100%" }} onClick={loadMore}>
-          Load More
-        </Button>
-      </Col>
+      {blockNumber > 0 && (
+        <Col span={24}>
+          <Button type="primary" style={{ width: "100%" }} onClick={loadMore}>
+            Load More
+          </Button>
+        </Col>
+      )}
+      <Modal
+        title="Transation Details"
+        visible={openModal}
+        width="100%"
+        onOk={() => setOpenModal(false)}
+        onCancel={() => setOpenModal(false)}
+      >
+        <p>Hash: {currentTransationItem?.hash}</p>
+        {currentTransationItem === undefined ||
+        currentTransationItem.decodeData === undefined ? (
+          <p>解析失败</p>
+        ) : (
+          <List
+            size="small"
+            header={null}
+            footer={null}
+            bordered
+            dataSource={currentTransationItem.decodeData}
+            renderItem={(ii) => <Transaction data={ii} />}
+          />
+        )}
+      </Modal>
     </Row>
   );
 }
