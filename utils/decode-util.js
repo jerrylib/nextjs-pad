@@ -7,14 +7,12 @@ import {
   ONINCH_ABI,
   STRATEGY_ABI,
   VAULT_ABI,
-  UNKNOW_ABI,
 } from "./../abis/index";
 
 abiDecoder.addABI(VAULT_ABI);
 abiDecoder.addABI(IERC20_ABI);
 abiDecoder.addABI(STRATEGY_ABI);
 abiDecoder.addABI(ONINCH_ABI);
-abiDecoder.addABI(UNKNOW_ABI);
 
 export const decodeLogs = (receipt = { logs: [] }) => {
   return abiDecoder.decodeLogs(receipt.logs);
