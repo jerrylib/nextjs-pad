@@ -10,12 +10,15 @@ import {
   UPDATE_BLOCK_NUMBER,
   LOAD_MORE,
   UPDATE_BLOCK_DETAIL,
+  UPDATE_HASH_DETAIL,
 } from "./actions";
 
 const initValue = {
   web3Instance: null,
   blockNumber: -1,
   blockList: [],
+  currentBlock: -1,
+  currentHash: null,
 };
 
 export const Web3Context = createContext({});
@@ -53,6 +56,7 @@ export const ReducerContextProvider = (props) => {
         return {
           ...preState,
           blockList: nextBlockList,
+          currentBlock: payload.id,
         };
       }
       case LOAD_MORE: {
@@ -62,7 +66,7 @@ export const ReducerContextProvider = (props) => {
         const blockList = preState.blockList.concat(
           map(array, (i, index) => {
             return {
-              id: `${startBlockNumber - 1 - index}`,
+              id: startBlockNumber - 1 - index,
               isInit: false,
             };
           })
@@ -70,8 +74,37 @@ export const ReducerContextProvider = (props) => {
         return {
           ...preState,
           blockList,
+          currentBlock: -1,
         };
       }
+      case UPDATE_HASH_DETAIL: {
+        const { blockList } = preState;
+        const { id, hash, decodeData } = payload;
+        const nextBlockList = map(blockList, (i) => {
+          if (i.id === id) {
+            const nextDetails = map(i.details, (ii) => {
+              if (ii.hash === hash) {
+                return {
+                  ...ii,
+                  decodeData,
+                };
+              }
+              return ii;
+            });
+            return {
+              ...i,
+              details: nextDetails,
+            };
+          }
+          return i;
+        });
+        return {
+          ...preState,
+          currentHash: hash,
+          blockList: nextBlockList,
+        };
+      }
+
       default:
         return preState;
     }
