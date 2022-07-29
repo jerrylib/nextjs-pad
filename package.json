@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@umijs/hooks": "^1.9.3",
+    "abi-decoder": "^2.4.0",
     "antd": "^4.21.6",
     "dayjs": "^1.11.3",
     "lodash": "^4.17.21",
