@@ -1080,7 +1080,7 @@ cookiejar@^2.1.1:
   resolved "https://registry.npmmirror.com/cookiejar/-/cookiejar-2.1.3.tgz#fc7a6216e408e74414b90230050842dacda75acc"
   integrity sha512-JxbCBUdrfr6AQjOXrxoTvAMJO4HBTUIlBzslcJPAz+/KT8yk53fXun51u+RenNYvad/+Vc2DIz5o9UxlCDymFQ==
 
-copy-to-clipboard@^3.2.0:
+copy-to-clipboard@^3.2.0, copy-to-clipboard@^3.3.1:
   version "3.3.1"
   resolved "https://registry.npmmirror.com/copy-to-clipboard/-/copy-to-clipboard-3.3.1.tgz#115aa1a9998ffab6196f93076ad6da3b913662ae"
   integrity sha512-i13qo6kIHTTpCm8/Wup+0b1mVWETvu2kIMzKoK8FpkLkFxlt0znUAHcMzox+T8sPlqtZXq3CulEjQHsYiGFJUw==
@@ -4441,13 +4441,6 @@ verror@1.10.0:
     assert-plus "^1.0.0"
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
-
-web3-abi-coder@^1.1.6:
-  version "1.1.6"
-  resolved "https://registry.npmmirror.com/web3-abi-coder/-/web3-abi-coder-1.1.6.tgz#a3c8fd9445deeaf32281388242b8bc16a273cdab"
-  integrity sha512-7EkfuwScKKErSlsQX2PyHf4t7NjSE89SpH+3I8EjyBpDDS0S3gbP5aGzJUdPXmQ+h+ULX49yXwwnLgcjneSJvg==
-  dependencies:
-    "@ethersproject/abi" "^5.6.3"
 
 web3-bzz@1.7.4:
   version "1.7.4"
