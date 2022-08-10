@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Input, Button, Row, Col, Divider, Collapse, Tag } from "antd";
-import { CheckCircleOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 
 // === Utils === //
 import Web3 from "web3";
@@ -24,7 +24,7 @@ const { Panel } = Collapse;
 
 const RPCS = [
   { name: "eth-mainnet", value: "https://rpc.ankr.com/eth" },
-  { name: "bsc-mainnet", value: "https://bsc-dataseed.binance.org" },
+  { name: "bsc-mainnet", value: "https://bsc-dataseed1.ninicoin.io" },
   { name: "matic-mainnet", value: "https://rpc-mainnet.maticvigil.com" },
   { name: "qa-sg", value: "https://rpc-qa-sg.bankofchain.io" },
   { name: "qa02-sg", value: "https://rpc-qa02-sg.bankofchain.io" },
@@ -107,6 +107,7 @@ const useContract = (
   defaultAbi
 ) => {
   const [rpc, setRpc] = useState(defaultRpc);
+  const [fetchLoading, setFetchLoading] = useState(false);
   const [address, setAddress] = useState(defaultAddress);
   const [blockNumber, setBlockNumber] = useState(defaultBlockNumber);
   const [abi, setAbi] = useState(defaultAbi);
@@ -120,17 +121,27 @@ const useContract = (
     abiJson = new Error("abi转换失败");
   }
 
-  const fetchNewestBlockNumber = () => {
-    try {
-      const web3 = new Web3(new Web3.providers.HttpProvider(rpc));
-      web3.eth
-        .getBlockNumber()
-        .catch(() => -1)
-        .then(setBlockNumber);
-    } catch (error) {
-      setBlockNumber(-1);
-    }
-  };
+  const fetchNewestBlockNumber = useCallback(() => {
+    setFetchLoading(true);
+    setBlockNumber("");
+    const promise = new Promise((resolve, reject) => {
+      try {
+        const web3 = new Web3(new Web3.providers.HttpProvider(rpc));
+        return web3.eth
+          .getBlockNumber()
+          .catch(() => -1)
+          .then(resolve);
+      } catch (error) {
+        resolve(-1);
+      }
+    });
+    promise.then(setBlockNumber).finally(() => {
+      setTimeout(() => {
+        setFetchLoading(false);
+      }, 500);
+    });
+  }, [rpc]);
+  useEffect(() => fetchNewestBlockNumber(), [rpc, fetchNewestBlockNumber]);
 
   const functionCall = (index) => {
     const abiItem = abiJson[index];
@@ -236,6 +247,7 @@ const useContract = (
           style={{ marginTop: "0.5rem", cursor: "pointer" }}
           onClick={fetchNewestBlockNumber}
         >
+          {fetchLoading && <LoadingOutlined style={{ marginRight: 10 }} />}
           Newest Block
         </Tag>
         <Tag

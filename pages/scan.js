@@ -34,7 +34,7 @@ import {
 import map from "lodash/map";
 import isEmpty from "lodash/isEmpty";
 import { decodeLogs } from "./../utils/decode-util";
-import { find, get } from "lodash";
+import { find } from "lodash";
 
 const { Panel } = Collapse;
 
