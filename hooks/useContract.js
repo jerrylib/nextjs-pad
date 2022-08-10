@@ -4,10 +4,20 @@ import { CheckCircleOutlined } from "@ant-design/icons";
 
 // === Utils === //
 import Web3 from "web3";
-import { get, isArray, isEmpty, map, reduce } from "lodash";
+import { get, isEmpty, map, reduce } from "lodash";
 
 // === Constants === //
-import { STRATEGY_ABI, IERC20_ABI, VAULT_ABI } from "../abis/index";
+import {
+  STRATEGY_ABI,
+  IERC20_ABI,
+  VAULT_ABI,
+  STRATEGY_ABI_USDI_v1_5_10,
+  VAULT_ABI_USDI_V1_5_10,
+  VAULT_BUFFER_V1_5_9,
+  STRATEGY_ABI_ETHI_v1_5_10,
+  VAULT_ABI_ETHI_V1_5_10,
+  VAULT_ABI_ETHI_V1_5_9,
+} from "../abis/index";
 
 const { TextArea } = Input;
 const { Panel } = Collapse;
@@ -20,7 +30,7 @@ const RPCS = [
   { name: "qa02-sg", value: "https://rpc-qa02-sg.bankofchain.io" },
   { name: "qa03-sg", value: "https://rpc-qa03-sg.bankofchain.io" },
   { name: "qa04-sg", value: "https://rpc-qa04-sg.bankofchain.io" },
-  { name: "stage-sg", value: "https://rpc-qa05-sg.bankofchain.io" },
+  { name: "stage-sg", value: "https://rpc-stage-sg.bankofchain.io" },
 ];
 const ADDRESSES = [
   {
@@ -73,9 +83,21 @@ const ADDRESSES = [
   },
 ];
 const ABIS = [
-  { name: "VAULT", value: JSON.stringify(VAULT_ABI) },
+  { name: "VAULT-USDi-v1.5.9", value: JSON.stringify(VAULT_ABI) },
+  { name: "VAULT-ETHi-v1.5.9", value: JSON.stringify(VAULT_ABI_ETHI_V1_5_9) },
+  { name: "VAULT-USDi-v1.5.10", value: JSON.stringify(VAULT_ABI_USDI_V1_5_10) },
+  { name: "VAULT-ETHi-v1.5.10", value: JSON.stringify(VAULT_ABI_ETHI_V1_5_10) },
   { name: "IERC20", value: JSON.stringify(IERC20_ABI) },
-  { name: "STRATEGY", value: JSON.stringify(STRATEGY_ABI) },
+  { name: "STRATEGY-v1.5.9", value: JSON.stringify(STRATEGY_ABI) },
+  {
+    name: "STRATEGY-USDi-v1.5.10",
+    value: JSON.stringify(STRATEGY_ABI_USDI_v1_5_10),
+  },
+  {
+    name: "STRATEGY-ETHi-v1.5.10",
+    value: JSON.stringify(STRATEGY_ABI_ETHI_v1_5_10),
+  },
+  { name: "VAULT-BUFFER-v1.5.9", value: JSON.stringify(VAULT_BUFFER_V1_5_9) },
 ];
 
 const useContract = (
