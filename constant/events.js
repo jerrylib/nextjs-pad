@@ -1,6 +1,6 @@
-export const Approval = "Approval";
-export const Transfer = "Transfer";
-export const Borrow = "Borrow";
-export const LendToStrategy = "LendToStrategy";
+export const Approval = 'Approval'
+export const Transfer = 'Transfer'
+export const Borrow = 'Borrow'
+export const LendToStrategy = 'LendToStrategy'
 
-export const Mint = "Mint";
+export const Mint = 'Mint'
