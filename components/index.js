@@ -1,3 +1,3 @@
-import Transaction from "./Transation";
+import Transaction from './Transation'
 
-export { Transaction };
+export { Transaction }
