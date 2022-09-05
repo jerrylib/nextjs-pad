@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "eslint": "eslint --cache --ext .js,.jsx .",
+    "prettier": "prettier -c -w \"**/*.{js,jsx}\"",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@umijs/hooks": "^1.9.3",
@@ -23,6 +26,10 @@
   },
   "devDependencies": {
     "eslint": "8.16.0",
-    "eslint-config-next": "12.1.6"
+    "eslint-config-next": "12.1.6",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-react": "^7.31.0",
+    "husky": "^8.0.1",
+    "prettier": "2.7.1"
   }
 }

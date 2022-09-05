@@ -1,5 +1,5 @@
-import useContract from "./useContract";
+import useContract from './useContract'
 
-export { useContract };
+export { useContract }
 
-export default useContract;
+export default useContract
