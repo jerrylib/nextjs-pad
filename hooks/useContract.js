@@ -4,6 +4,7 @@ import { CheckCircleOutlined, LoadingOutlined } from '@ant-design/icons'
 
 // === Utils === //
 import Web3 from 'web3'
+import BigNumber from 'bignumber.js'
 import { get, isEmpty, map, reduce } from 'lodash'
 
 // === Constants === //
@@ -106,6 +107,7 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
   const [address, setAddress] = useState(defaultAddress)
   const [blockNumber, setBlockNumber] = useState(defaultBlockNumber)
   const [abi, setAbi] = useState(defaultAbi)
+  const [balance, setBalance] = useState('0')
 
   const [inputDatas, setInputDatas] = useState({})
   const [outputDatas, setOutputDatas] = useState({})
@@ -119,7 +121,7 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
   const fetchNewestBlockNumber = useCallback(() => {
     setFetchLoading(true)
     setBlockNumber('')
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise(resolve => {
       try {
         const web3 = new Web3(new Web3.providers.HttpProvider(rpc))
         return web3.eth
@@ -204,7 +206,12 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
         })}
       </Col>
       <Col span={24}>
-        <Input placeholder="contract address" value={address} onChange={v => setAddress(v.target.value)} />
+        <Input
+          placeholder="contract address"
+          value={address}
+          onChange={v => setAddress(v.target.value)}
+          addonAfter={`ETH Balance: ${new BigNumber(balance).toFormat()}`}
+        />
         {map(ADDRESSES, item => {
           const { name, value } = item
           return (
@@ -226,10 +233,10 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
           {fetchLoading && <LoadingOutlined style={{ marginRight: 10 }} />}
           Newest Block
         </Tag>
-        <Tag color={'#1890ff'} style={{ marginTop: '0.5rem', cursor: 'pointer' }} onClick={() => setBlockNumber(++blockNumber)}>
+        <Tag color={'#1890ff'} style={{ marginTop: '0.5rem', cursor: 'pointer' }} onClick={() => setBlockNumber(blockNumber + 1)}>
           + 1
         </Tag>
-        <Tag color={'#1890ff'} style={{ marginTop: '0.5rem', cursor: 'pointer' }} onClick={() => setBlockNumber(--blockNumber)}>
+        <Tag color={'#1890ff'} style={{ marginTop: '0.5rem', cursor: 'pointer' }} onClick={() => setBlockNumber(blockNumber - 1)}>
           - 1
         </Tag>
       </Col>
@@ -294,6 +301,16 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
       })}
     </Collapse>
   )
+
+  useEffect(() => {
+    try {
+      const web3 = new Web3(new Web3.providers.HttpProvider(rpc))
+      web3.eth.getBalance(address).then(setBalance)
+    } catch (error) {
+      console.log('balance fetch error=', error)
+    }
+  }, [address, rpc])
+
   return { rpc, abi, address, abiJson, blockNumber, InputArea, FunctionArea }
 }
 
