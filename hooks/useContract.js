@@ -305,11 +305,11 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
   useEffect(() => {
     try {
       const web3 = new Web3(new Web3.providers.HttpProvider(rpc))
-      web3.eth.getBalance(address).then(setBalance)
+      web3.eth.getBalance(address, blockNumber).then(setBalance)
     } catch (error) {
       console.log('balance fetch error=', error)
     }
-  }, [address, rpc])
+  }, [address, rpc, blockNumber])
 
   return { rpc, abi, address, abiJson, blockNumber, InputArea, FunctionArea }
 }
