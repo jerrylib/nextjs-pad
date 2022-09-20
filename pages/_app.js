@@ -14,6 +14,7 @@ function MyApp({ Component, pageProps }) {
       <Head>
         <title>Bank Of Chain Tools</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/2.2.7/echarts-all.js"></script>
       </Head>
       <Row gutter={[12, 12]} style={{ padding: '24px 0 0 24px' }}>
         <Col span={24}>
