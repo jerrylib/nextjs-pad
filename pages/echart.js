@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 // === Components === //
-import { Row, Col, Descriptions, Checkbox, DatePicker, Radio } from 'antd'
+import { Row, Col, Descriptions, Checkbox, DatePicker } from 'antd'
+import ReactEcharts from 'echarts-for-react'
 
 // === Utils === //
 import get from 'lodash/get'
@@ -15,16 +16,29 @@ import axios from 'axios'
 
 const { RangePicker } = DatePicker
 
-const colors = ['#00bcd3', '#8cc34b']
 const splitSymbol = '::'
+const columeMap = {
+  'FEES APY': 'apy',
+  'NET APY': 'lossApy'
+}
+const KEY = 'SELECT_STRATEGY'
 
 const Echart = () => {
   const [days, setDays] = useState(30)
   const [datas, setDatas] = useState([])
-  const [range, setRange] = useState()
-  const [strategies, setStrategies] = useState([])
+  const [range, setRange] = useState([new moment(new Date(2021, 4, 4)), new moment(new Date(2022, 8, 15))])
+  const [strategies, setStrategies] = useState([
+    'ETH_USDT_3000::NET APY',
+    'ETH_USDT_500::NET APY',
+    'ETH_USDC_500::NET APY',
+    'ALLOCATION::NET APY',
+    'ETH_DAI_3000::NET APY',
+    'ETH_USDC_3000::NET APY',
+    'ETH_DAI_500::NET APY'
+  ])
   const [myChart, setMyChart] = useState()
 
+  console.log('strategies=', strategies)
   const [startDate = moment().utcOffset(0).subtract(days, 'day').startOf('day'), endDate = moment().startOf('day')] = range || []
 
   const dataFetch = useCallback(() => {
@@ -34,19 +48,9 @@ const Echart = () => {
     })
   }, [startDate.valueOf(), endDate.valueOf()])
 
-  useEffect(() => {
-    if (isEmpty(myChart)) return
-    dataFetch()
-  }, [myChart, dataFetch])
-
-  useEffect(() => {
-    var myChart = echarts.init(document.getElementById('chart'))
-    setMyChart(myChart)
-  }, [])
-
   const startMoment = startDate.clone()
   const calcArray = reduce(
-    new Array(days),
+    new Array(endDate.diff(startDate, 'days')),
     rs => {
       const currentMoment = startMoment.subtract(-1, 'day')
       rs.push(currentMoment.format('yyyy-MM-DD'))
@@ -64,7 +68,7 @@ const Echart = () => {
     const offChainApyMap = keyBy(
       map(dataGroups[strategyName], i => {
         return {
-          value: 1 * i[colume],
+          value: 1 * i[columeMap[colume]],
           date: moment(i.dateTimestamp * 1000)
             .utcOffset(0)
             .format('yyyy-MM-DD')
@@ -87,6 +91,7 @@ const Echart = () => {
   })
 
   const customChart = {
+    animation: false,
     legend: {
       show: !0,
       x: 'right',
@@ -154,55 +159,63 @@ const Echart = () => {
       }
     ],
     series: map(lineArray, (ii, index) => {
+      const key = index + 2
       return {
+        key,
         name: strategies[index],
         type: 'line',
         smooth: !0,
         itemStyle: {
           normal: {
-            color: colors[index],
-            areaStyle: {
-              color: colors[index],
-              type: 'default'
-            }
+            // areaStyle: {
+            //   // color: colors[index],
+            //   type: 'default'
+            // }
           }
         },
         data: map(ii, 'value'),
         symbol: 'none',
         legendHoverLink: !1,
-        z: index + 2
+        z: key
       }
     })
   }
 
-  myChart?.setOption(customChart)
+  useEffect(() => {
+    dataFetch()
+  }, [dataFetch])
 
   return (
-    <Row>
+    <Row style={{ padding: 20 }}>
       <Col span={24}>
         <Descriptions title="Filter" column={1}>
+          <Descriptions.Item label="Range">
+            <RangePicker value={range} onChange={setRange} />
+          </Descriptions.Item>
           <Descriptions.Item label="Strategies">
             <Checkbox.Group style={{ width: '100%' }} value={strategies} onChange={setStrategies}>
               <Row>
                 {map(strategyNames, i => {
-                  const apyTitle = `${i}${splitSymbol}apy`
-                  const lossApyTitle = `${i}${splitSymbol}lossApy`
+                  const title = `${i}${splitSymbol}`
                   return (
-                    <>
-                      <Col span={6} key={apyTitle}>
-                        <Checkbox value={apyTitle}>{apyTitle}</Checkbox>
-                      </Col>
-                      <Col span={6} key={lossApyTitle}>
-                        <Checkbox value={lossApyTitle}>{lossApyTitle}</Checkbox>
-                      </Col>
-                    </>
+                    <Col span={6} key={i}>
+                      <Checkbox value={`${title}NET APY`}>{`${title}NET APY`}</Checkbox>
+                    </Col>
+                  )
+                })}
+              </Row>
+              <br />
+              <Row>
+                {map(strategyNames, i => {
+                  const title = `${i}${splitSymbol}`
+                  return (
+                    <Col span={6} key={i}>
+                      <Checkbox value={`${title}FEES APY`}>{`${title}FEES APY`}</Checkbox>
+                    </Col>
                   )
                 })}
               </Row>
             </Checkbox.Group>
-          </Descriptions.Item>
-          <Descriptions.Item label="Range">
-            <RangePicker onChange={setRange} />
           </Descriptions.Item>
           {/* <Descriptions.Item label="Days">
             <Radio.Group onChange={v => setDays(v.target.value)} value={days}>
@@ -215,7 +228,7 @@ const Echart = () => {
         </Descriptions>
       </Col>
       <Col span={24}>
-        <div id="chart" style={{ height: '500px', width: '100%' }}></div>
+        <ReactEcharts key={customChart.series.length} option={customChart} style={{ height: '500px', width: '100%' }} />
       </Col>
     </Row>
   )
