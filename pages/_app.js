@@ -3,7 +3,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { Row, Col, Segmented } from 'antd'
 import { ReducerContextProvider } from '../reducer/web3Reducer'
-import { BarsOutlined, AppstoreOutlined } from '@ant-design/icons'
+import { BarsOutlined, AppstoreOutlined, LineChartOutlined } from '@ant-design/icons'
 
 // === Utils === //
 import get from 'lodash/get'
@@ -32,6 +32,10 @@ function MyApp({ Component, pageProps }) {
                 {
                   value: '/scan',
                   icon: <AppstoreOutlined onClick={() => router.push('/scan')} />
+                },
+                {
+                  value: '/echart',
+                  icon: <LineChartOutlined onClick={() => router.push('/echart')} />
                 }
               ]}
             />
