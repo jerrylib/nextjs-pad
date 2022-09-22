@@ -102,11 +102,11 @@ const ABIS = [
 ]
 
 const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi) => {
-  const [rpc, setRpc] = useState(defaultRpc)
+  const [rpc, setRpc] = useState('')
   const [fetchLoading, setFetchLoading] = useState(false)
-  const [address, setAddress] = useState(defaultAddress)
-  const [blockNumber, setBlockNumber] = useState(defaultBlockNumber)
-  const [abi, setAbi] = useState(defaultAbi)
+  const [address, setAddress] = useState('')
+  const [blockNumber, setBlockNumber] = useState(-1)
+  const [abi, setAbi] = useState('')
   const [balance, setBalance] = useState('0')
 
   const [inputDatas, setInputDatas] = useState({})
@@ -119,8 +119,9 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
   }
 
   const fetchNewestBlockNumber = useCallback(() => {
+    if (isEmpty(rpc)) return
     setFetchLoading(true)
-    setBlockNumber('')
+    setBlockNumber(-1)
     const promise = new Promise(resolve => {
       try {
         const web3 = new Web3(new Web3.providers.HttpProvider(rpc))
@@ -138,7 +139,11 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
       }, 500)
     })
   }, [rpc])
-  useEffect(() => fetchNewestBlockNumber(), [rpc, fetchNewestBlockNumber])
+
+  useEffect(() => {
+    if (blockNumber > 0) return
+    fetchNewestBlockNumber()
+  }, [rpc, blockNumber, fetchNewestBlockNumber])
 
   const functionCall = index => {
     const abiItem = abiJson[index]
@@ -189,7 +194,14 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
   const InputArea = (
     <Row key="InputArea" gutter={[8, 8]}>
       <Col span={24}>
-        <Input placeholder="rpc url" value={rpc} onChange={v => setRpc(v.target.value)} />
+        <Input
+          placeholder="rpc url"
+          value={rpc}
+          onChange={v => {
+            setRpc(v.target.value)
+            setBlockNumber(-1)
+          }}
+        />
         {map(RPCS, item => {
           const { name, value } = item
           return (
@@ -198,7 +210,10 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
               icon={value === rpc && <CheckCircleOutlined />}
               color={value === rpc ? '#f50' : '#1890ff'}
               style={{ marginTop: '0.5rem', cursor: 'pointer' }}
-              onClick={() => setRpc(value)}
+              onClick={() => {
+                setRpc(value)
+                setBlockNumber(-1)
+              }}
             >
               {name}
             </Tag>
@@ -303,6 +318,7 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
   )
 
   useEffect(() => {
+    if (isEmpty(address) || blockNumber < 0) return
     try {
       const web3 = new Web3(new Web3.providers.HttpProvider(rpc))
       web3.eth.getBalance(address, blockNumber).then(setBalance)
@@ -310,6 +326,33 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
       console.log('balance fetch error=', error)
     }
   }, [address, rpc, blockNumber])
+
+  useEffect(() => {
+    if (isEmpty(rpc)) return
+    sessionStorage.setItem('rpc', rpc)
+  }, [rpc])
+
+  useEffect(() => {
+    if (blockNumber < 0) return
+    sessionStorage.setItem('blockNumber', blockNumber)
+  }, [blockNumber])
+
+  useEffect(() => {
+    if (isEmpty(address)) return
+    sessionStorage.setItem('address', address)
+  }, [address])
+
+  useEffect(() => {
+    if (isEmpty(abi)) return
+    sessionStorage.setItem('abi', abi)
+  }, [abi])
+
+  useEffect(() => {
+    setRpc(sessionStorage.getItem('rpc') || defaultRpc)
+    setBlockNumber(sessionStorage.getItem('blockNumber') || defaultBlockNumber)
+    setAddress(sessionStorage.getItem('address') || defaultAddress)
+    setAbi(sessionStorage.getItem('abi') || defaultAbi)
+  }, [])
 
   return { rpc, abi, address, abiJson, blockNumber, InputArea, FunctionArea }
 }
