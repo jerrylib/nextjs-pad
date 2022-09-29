@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_SERVER = 'https://service-pr02-sg.bankofchain.io'
+const API_SERVER = 'https://service-qa02-sg.bankofchain.io'
 export const getStrategyApyDetails = (chainId, vaultAddress, strategyAddress, offset = 0, limit = 20) => {
   const nextParams = {
     strategyAddress,
