@@ -278,10 +278,11 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
   const FunctionArea = (
     <Collapse key={'FunctionArea'}>
       {map(abiJson, (item, index) => {
-        const { name, inputs, outputs, type, payable } = item
+        const { name, inputs, outputs, type, stateMutability } = item
         if (type !== 'function') return
+        const isWriteFun = stateMutability !== 'view' && stateMutability !== 'pure'
         return (
-          <Panel header={`${name} (${payable === true ? 'Write' : 'Read'})`} key={index} collapsible={payable === true ? 'disabled' : ''}>
+          <Panel header={`${name} (${isWriteFun ? 'Write' : 'Read'})`} key={index} collapsible={isWriteFun ? 'disabled' : ''}>
             <Button type="primary" onClick={() => functionCall(index)}>
               call
             </Button>
