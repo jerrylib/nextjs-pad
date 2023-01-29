@@ -17,7 +17,11 @@ import {
   VAULT_BUFFER_V1_5_9,
   STRATEGY_ABI_ETHI_v1_5_10,
   VAULT_ABI_ETHI_V1_5_10,
-  VAULT_ABI_ETHI_V1_5_9
+  VAULT_ABI_ETHI_V1_5_9,
+  VALUE_INTERPRETER_ABI,
+  USDI_BASE_STRATEGY_ABI,
+  PRICE_ORACLE_CONSUMER,
+  ETH_BASE_STRATEGY
 } from '../abis/index'
 
 const { TextArea } = Input
@@ -98,7 +102,11 @@ const ABIS = [
     name: 'STRATEGY-ETHi-v1.5.10',
     value: JSON.stringify(STRATEGY_ABI_ETHI_v1_5_10)
   },
-  { name: 'VAULT-BUFFER-v1.5.9', value: JSON.stringify(VAULT_BUFFER_V1_5_9) }
+  { name: 'VAULT-BUFFER-v1.5.9', value: JSON.stringify(VAULT_BUFFER_V1_5_9) },
+  { name: 'VALUE_INTERPRETER_ABI', value: JSON.stringify(VALUE_INTERPRETER_ABI) },
+  { name: 'USDI_BASE_STRATEGY_ABI', value: JSON.stringify(USDI_BASE_STRATEGY_ABI) },
+  { name: 'PRICE_ORACLE_CONSUMER', value: JSON.stringify(PRICE_ORACLE_CONSUMER) },
+  { name: 'ETH_BASE_STRATEGY', value: JSON.stringify(ETH_BASE_STRATEGY) }
 ]
 
 const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi) => {
