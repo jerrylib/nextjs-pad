@@ -8772,3 +8772,1451 @@ export const VAULT_ABI_ETHI_V1_5_9 = [
     type: 'function'
   }
 ]
+
+export const VALUE_INTERPRETER_ABI = [
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_primitivePriceFeed',
+        type: 'address'
+      },
+      {
+        internalType: 'address',
+        name: '_aggregatedDerivativePriceFeed',
+        type: 'address'
+      },
+      {
+        internalType: 'address',
+        name: '_accessControlProxy',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'nonpayable',
+    type: 'constructor'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: '_aggregatedDerivativePriceFeed',
+        type: 'address'
+      }
+    ],
+    name: 'UpdateAggregatedDerivativePriceFeed',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: '_primitivePriceFeed',
+        type: 'address'
+      }
+    ],
+    name: 'UpdatePrimitivePriceFeed',
+    type: 'event'
+  },
+  {
+    inputs: [],
+    name: 'accessControlProxy',
+    outputs: [
+      {
+        internalType: 'contract IAccessControlProxy',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_baseAsset',
+        type: 'address'
+      },
+      {
+        internalType: 'uint256',
+        name: '_amount',
+        type: 'uint256'
+      },
+      {
+        internalType: 'address',
+        name: '_quoteAsset',
+        type: 'address'
+      }
+    ],
+    name: 'calcCanonicalAssetValue',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '_value',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_baseAsset',
+        type: 'address'
+      },
+      {
+        internalType: 'uint256',
+        name: '_amount',
+        type: 'uint256'
+      }
+    ],
+    name: 'calcCanonicalAssetValueInUsd',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '_value',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address[]',
+        name: '_baseAssets',
+        type: 'address[]'
+      },
+      {
+        internalType: 'uint256[]',
+        name: '_amounts',
+        type: 'uint256[]'
+      },
+      {
+        internalType: 'address',
+        name: '_quoteAsset',
+        type: 'address'
+      }
+    ],
+    name: 'calcCanonicalAssetsTotalValue',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '_value',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'getAggregatedDerivativePriceFeed',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'getPrimitivePriceFeed',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_baseAsset',
+        type: 'address'
+      }
+    ],
+    name: 'price',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '_value',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_aggregatedDerivativePriceFeed',
+        type: 'address'
+      }
+    ],
+    name: 'setAggregatedDerivativePriceFeed',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_primitivePriceFeed',
+        type: 'address'
+      }
+    ],
+    name: 'setPrimitivePriceFeed',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  }
+]
+
+export const USDI_BASE_STRATEGY_ABI = [
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address[]',
+        name: '_assets',
+        type: 'address[]'
+      },
+      {
+        indexed: false,
+        internalType: 'uint256[]',
+        name: '_amounts',
+        type: 'uint256[]'
+      }
+    ],
+    name: 'Borrow',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '_withdrawShares',
+        type: 'uint256'
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '_totalShares',
+        type: 'uint256'
+      },
+      {
+        indexed: false,
+        internalType: 'address[]',
+        name: '_assets',
+        type: 'address[]'
+      },
+      {
+        indexed: false,
+        internalType: 'uint256[]',
+        name: '_amounts',
+        type: 'uint256[]'
+      }
+    ],
+    name: 'Repay',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'bool',
+        name: '_oldValue',
+        type: 'bool'
+      },
+      {
+        indexed: false,
+        internalType: 'bool',
+        name: '_newValue',
+        type: 'bool'
+      }
+    ],
+    name: 'SetIsWantRatioIgnorable',
+    type: 'event'
+  },
+  {
+    inputs: [],
+    name: 'accessControlProxy',
+    outputs: [
+      {
+        internalType: 'contract IAccessControlProxy',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address[]',
+        name: '_assets',
+        type: 'address[]'
+      },
+      {
+        internalType: 'uint256[]',
+        name: '_amounts',
+        type: 'uint256[]'
+      }
+    ],
+    name: 'borrow',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'estimatedTotalAssets',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'get3rdPoolAssets',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'getOutputsInfo',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'outputCode',
+            type: 'uint256'
+          },
+          {
+            internalType: 'address[]',
+            name: 'outputTokens',
+            type: 'address[]'
+          }
+        ],
+        internalType: 'struct IStrategy.OutputInfo[]',
+        name: '_outputsInfo',
+        type: 'tuple[]'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'getPositionDetail',
+    outputs: [
+      {
+        internalType: 'address[]',
+        name: '_tokens',
+        type: 'address[]'
+      },
+      {
+        internalType: 'uint256[]',
+        name: '_amounts',
+        type: 'uint256[]'
+      },
+      {
+        internalType: 'bool',
+        name: '_isUsd',
+        type: 'bool'
+      },
+      {
+        internalType: 'uint256',
+        name: '_usdValue',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'getVersion',
+    outputs: [
+      {
+        internalType: 'string',
+        name: '',
+        type: 'string'
+      }
+    ],
+    stateMutability: 'pure',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'getWants',
+    outputs: [
+      {
+        internalType: 'address[]',
+        name: '',
+        type: 'address[]'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'getWantsInfo',
+    outputs: [
+      {
+        internalType: 'address[]',
+        name: '_assets',
+        type: 'address[]'
+      },
+      {
+        internalType: 'uint256[]',
+        name: '_ratios',
+        type: 'uint256[]'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'harvest',
+    outputs: [
+      {
+        internalType: 'address[]',
+        name: '_rewardsTokens',
+        type: 'address[]'
+      },
+      {
+        internalType: 'uint256[]',
+        name: '_claimAmounts',
+        type: 'uint256[]'
+      }
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'harvester',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'isWantRatioIgnorable',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'name',
+    outputs: [
+      {
+        internalType: 'string',
+        name: '',
+        type: 'string'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'poolQuota',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'protocol',
+    outputs: [
+      {
+        internalType: 'uint16',
+        name: '',
+        type: 'uint16'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_repayShares',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: '_totalShares',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: '_outputCode',
+        type: 'uint256'
+      }
+    ],
+    name: 'repay',
+    outputs: [
+      {
+        internalType: 'address[]',
+        name: '_assets',
+        type: 'address[]'
+      },
+      {
+        internalType: 'uint256[]',
+        name: '_amounts',
+        type: 'uint256[]'
+      }
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bool',
+        name: '_isWantRatioIgnorable',
+        type: 'bool'
+      }
+    ],
+    name: 'setIsWantRatioIgnorable',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'valueInterpreter',
+    outputs: [
+      {
+        internalType: 'contract IValueInterpreter',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'vault',
+    outputs: [
+      {
+        internalType: 'contract IVault',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    name: 'wants',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  }
+]
+
+export const PRICE_ORACLE_CONSUMER = [
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint8',
+        name: 'version',
+        type: 'uint8'
+      }
+    ],
+    name: 'Initialized',
+    type: 'event'
+  },
+  {
+    inputs: [],
+    name: 'ETH_USD_AGGREGATOR',
+    outputs: [
+      {
+        internalType: 'contract AggregatorInterface',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'STETH_ETH_AGGREGATOR',
+    outputs: [
+      {
+        internalType: 'contract AggregatorInterface',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'decimals',
+    outputs: [
+      {
+        internalType: 'uint8',
+        name: '',
+        type: 'uint8'
+      }
+    ],
+    stateMutability: 'pure',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'ethPriceInUsd',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'initialize',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_asset',
+        type: 'address'
+      }
+    ],
+    name: 'priceInEth',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_asset',
+        type: 'address'
+      }
+    ],
+    name: 'priceInUSD',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'rEth2PriceInEth',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'rEth2PriceInUsd',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'rEthPriceInEth',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'rEthPriceInUsd',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'sETH2',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'sEth2PriceInEth',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'sEth2PriceInUsd',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'sEthPriceInEth',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'pure',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'stEthPriceInEth',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'stEthPriceInUsd',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_asset',
+        type: 'address'
+      },
+      {
+        internalType: 'uint256',
+        name: '_amount',
+        type: 'uint256'
+      }
+    ],
+    name: 'valueInEth',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_fromToken',
+        type: 'address'
+      },
+      {
+        internalType: 'uint256',
+        name: '_amount',
+        type: 'uint256'
+      },
+      {
+        internalType: 'address',
+        name: '_toToken',
+        type: 'address'
+      }
+    ],
+    name: 'valueInTargetToken',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_asset',
+        type: 'address'
+      },
+      {
+        internalType: 'uint256',
+        name: '_amount',
+        type: 'uint256'
+      }
+    ],
+    name: 'valueInUsd',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'version',
+    outputs: [
+      {
+        internalType: 'string',
+        name: '',
+        type: 'string'
+      }
+    ],
+    stateMutability: 'pure',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'wEthPriceInEth',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'pure',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'wEthPriceInUsd',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'wstEthPriceInEth',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'wstEthPriceInUsd',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  }
+]
+
+export const ETH_BASE_STRATEGY = [
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address[]',
+        name: '_assets',
+        type: 'address[]'
+      },
+      {
+        indexed: false,
+        internalType: 'uint256[]',
+        name: '_amounts',
+        type: 'uint256[]'
+      }
+    ],
+    name: 'Borrow',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint8',
+        name: 'version',
+        type: 'uint8'
+      }
+    ],
+    name: 'Initialized',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '_withdrawShares',
+        type: 'uint256'
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '_totalShares',
+        type: 'uint256'
+      },
+      {
+        indexed: false,
+        internalType: 'address[]',
+        name: '_assets',
+        type: 'address[]'
+      },
+      {
+        indexed: false,
+        internalType: 'uint256[]',
+        name: '_amounts',
+        type: 'uint256[]'
+      }
+    ],
+    name: 'Repay',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'bool',
+        name: '_oldValue',
+        type: 'bool'
+      },
+      {
+        indexed: false,
+        internalType: 'bool',
+        name: '_newValue',
+        type: 'bool'
+      }
+    ],
+    name: 'SetIsWantRatioIgnorable',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: '_strategy',
+        type: 'address'
+      },
+      {
+        indexed: false,
+        internalType: 'address[]',
+        name: '_rewards',
+        type: 'address[]'
+      },
+      {
+        indexed: false,
+        internalType: 'uint256[]',
+        name: '_rewardAmounts',
+        type: 'uint256[]'
+      },
+      {
+        indexed: false,
+        internalType: 'address[]',
+        name: '_wants',
+        type: 'address[]'
+      },
+      {
+        indexed: false,
+        internalType: 'uint256[]',
+        name: '_wantAmounts',
+        type: 'uint256[]'
+      }
+    ],
+    name: 'SwapRewardsToWants',
+    type: 'event'
+  },
+  {
+    stateMutability: 'payable',
+    type: 'fallback'
+  },
+  {
+    inputs: [],
+    name: 'accessControlProxy',
+    outputs: [
+      {
+        internalType: 'contract IAccessControlProxy',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address[]',
+        name: '_assets',
+        type: 'address[]'
+      },
+      {
+        internalType: 'uint256[]',
+        name: '_amounts',
+        type: 'uint256[]'
+      }
+    ],
+    name: 'borrow',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'estimatedTotalAssets',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '_assetsInETH',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'get3rdPoolAssets',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'getOutputsInfo',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'outputCode',
+            type: 'uint256'
+          },
+          {
+            internalType: 'address[]',
+            name: 'outputTokens',
+            type: 'address[]'
+          }
+        ],
+        internalType: 'struct ETHBaseStrategy.OutputInfo[]',
+        name: '_outputsInfo',
+        type: 'tuple[]'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'getPositionDetail',
+    outputs: [
+      {
+        internalType: 'address[]',
+        name: '_tokens',
+        type: 'address[]'
+      },
+      {
+        internalType: 'uint256[]',
+        name: '_amounts',
+        type: 'uint256[]'
+      },
+      {
+        internalType: 'bool',
+        name: '_isETH',
+        type: 'bool'
+      },
+      {
+        internalType: 'uint256',
+        name: '_ethValue',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'getVersion',
+    outputs: [
+      {
+        internalType: 'string',
+        name: '',
+        type: 'string'
+      }
+    ],
+    stateMutability: 'pure',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'getWants',
+    outputs: [
+      {
+        internalType: 'address[]',
+        name: '',
+        type: 'address[]'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'getWantsInfo',
+    outputs: [
+      {
+        internalType: 'address[]',
+        name: '_assets',
+        type: 'address[]'
+      },
+      {
+        internalType: 'uint256[]',
+        name: '_ratios',
+        type: 'uint256[]'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'harvest',
+    outputs: [
+      {
+        internalType: 'address[]',
+        name: '_rewardsTokens',
+        type: 'address[]'
+      },
+      {
+        internalType: 'uint256[]',
+        name: '_claimAmounts',
+        type: 'uint256[]'
+      }
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'isWantRatioIgnorable',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'name',
+    outputs: [
+      {
+        internalType: 'string',
+        name: '',
+        type: 'string'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'poolQuota',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'priceOracleConsumer',
+    outputs: [
+      {
+        internalType: 'contract IPriceOracleConsumer',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'protocol',
+    outputs: [
+      {
+        internalType: 'uint16',
+        name: '',
+        type: 'uint16'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_repayShares',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: '_totalShares',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: '_outputCode',
+        type: 'uint256'
+      }
+    ],
+    name: 'repay',
+    outputs: [
+      {
+        internalType: 'address[]',
+        name: '_assets',
+        type: 'address[]'
+      },
+      {
+        internalType: 'uint256[]',
+        name: '_amounts',
+        type: 'uint256[]'
+      }
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bool',
+        name: '_isWantRatioIgnorable',
+        type: 'bool'
+      }
+    ],
+    name: 'setIsWantRatioIgnorable',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'vault',
+    outputs: [
+      {
+        internalType: 'contract IETHVault',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    name: 'wants',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    stateMutability: 'payable',
+    type: 'receive'
+  }
+]
