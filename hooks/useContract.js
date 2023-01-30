@@ -21,7 +21,9 @@ import {
   VALUE_INTERPRETER_ABI,
   USDI_BASE_STRATEGY_ABI,
   PRICE_ORACLE_CONSUMER,
-  ETH_BASE_STRATEGY
+  ETH_BASE_STRATEGY,
+  PRICE_ORACLE_ABI,
+  CONVEX_IB_USDT_STRATEGY_ABI
 } from '../abis/index'
 
 const { TextArea } = Input
@@ -106,7 +108,9 @@ const ABIS = [
   { name: 'VALUE_INTERPRETER_ABI', value: JSON.stringify(VALUE_INTERPRETER_ABI) },
   { name: 'USDI_BASE_STRATEGY_ABI', value: JSON.stringify(USDI_BASE_STRATEGY_ABI) },
   { name: 'PRICE_ORACLE_CONSUMER', value: JSON.stringify(PRICE_ORACLE_CONSUMER) },
-  { name: 'ETH_BASE_STRATEGY', value: JSON.stringify(ETH_BASE_STRATEGY) }
+  { name: 'ETH_BASE_STRATEGY', value: JSON.stringify(ETH_BASE_STRATEGY) },
+  { name: 'PRICE_ORACLE_ABI', value: JSON.stringify(PRICE_ORACLE_ABI) },
+  { name: 'CONVEX_IB_USDT_STRATEGY_ABI', value: JSON.stringify(CONVEX_IB_USDT_STRATEGY_ABI) }
 ]
 
 const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi) => {
