@@ -8,8 +8,6 @@ import { BarsOutlined, AppstoreOutlined, LineChartOutlined } from '@ant-design/i
 // === Utils === //
 import get from 'lodash/get'
 
-import 'antd/dist/antd.css'
-
 function MyApp({ Component, pageProps }) {
   const router = useRouter()
   const isFull = get(router, 'query.full', false)
