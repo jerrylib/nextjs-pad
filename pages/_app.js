@@ -10,7 +10,7 @@ import get from 'lodash/get'
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter()
-  const isFull = get(router, 'query.full', false)
+  const isFull = get(router, 'query.full', true)
   return (
     <ReducerContextProvider>
       <Head>
