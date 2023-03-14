@@ -1,3 +1,4 @@
+// @unocss-include
 import React from 'react'
 import { Row, Col } from 'antd'
 
@@ -13,18 +14,19 @@ const defaultBlockNumber = -1
 const defaultAbi = JSON.stringify(IERC20_ABI)
 
 export default function Index() {
-  const { abiJson, InputArea, FunctionArea } = useContract(defaultRpc, defaultContractAddress, defaultBlockNumber, defaultAbi)
+  // const { abiJson, InputArea, FunctionArea } = useContract(defaultRpc, defaultContractAddress, defaultBlockNumber, defaultAbi)
 
   return (
-    <Row gutter={[12, 12]} style={{ padding: 24 }}>
-      <Col span={24}>{InputArea}</Col>
+    <Row gutter={[12, 12]} style={{ padding: 24 }} className="bg-red-900 text-white font-10">
+      {/* <Col span={24}>{InputArea}</Col>
       {abiJson instanceof Error ? (
         <Col span={24}>
           <p style={{ color: 'red' }}>abi解析失败！</p>
         </Col>
       ) : (
         <Col span={24}>{FunctionArea}</Col>
-      )}
+      )} */}
+      qaa
     </Row>
   )
 }
