@@ -1,3 +1,4 @@
+// @unocss-include
 import React from 'react'
 import { Row, Col } from 'antd'
 
@@ -16,7 +17,7 @@ export default function Index() {
   const { abiJson, InputArea, FunctionArea } = useContract(defaultRpc, defaultContractAddress, defaultBlockNumber, defaultAbi)
 
   return (
-    <Row gutter={[12, 12]} style={{ padding: 24 }}>
+    <Row gutter={[0, 12]} className="p-4">
       <Col span={24}>{InputArea}</Col>
       {abiJson instanceof Error ? (
         <Col span={24}>

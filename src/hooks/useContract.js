@@ -178,6 +178,25 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
     const abiItem = abiJson[index]
     if (isEmpty(abiItem)) return
     const { name, inputs, outputs } = abiItem
+
+    // reset the result
+    const nextOutputDatas = reduce(
+      outputs,
+      (rs, outputItem, outputItemIndex) => {
+        if (isEmpty(outputItem.name) || nextV[outputItem.name] === undefined) {
+          rs[`${name}.${outputItemIndex}`] = ''
+        } else {
+          rs[`${name}.${outputItemIndex}`] = ''
+        }
+        return rs
+      },
+      {}
+    )
+    setOutputDatas({
+      ...outputDatas,
+      ...nextOutputDatas
+    })
+
     setLoadingDatas({
       ...loadingDatas,
       [name]: true
@@ -190,6 +209,9 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
       const vaultContract = new web3.eth.Contract(abiJson, address)
       vaultContract.methods[name](...nextParams)
         .call(undefined, blockNumber)
+        .catch(e => {
+          return e.message
+        })
         .then(nextV => {
           const nextOutputDatas = reduce(
             outputs,
@@ -350,14 +372,16 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
             {!isEmpty(outputs) && <Divider orientation="left">Outputs</Divider>}
             {map(outputs, (outputItem, outputItemIndex) => {
               return (
-                <p key={outputItemIndex}>
+                <div key={outputItemIndex}>
                   <Space>
                     {`${name}.[${outputItemIndex}] (${outputItem.type})`}=
-                    <Spin spinning={get(loadingDatas, name, false)} size="small">
-                      <span style={{ color: 'red', wordBreak: 'break-all' }}>{`${get(outputDatas, `${name}.${outputItemIndex}`, '')}`}</span>
-                    </Spin>
+                    <span style={{ color: 'red', wordBreak: 'break-all' }}>
+                      <Spin spinning={get(loadingDatas, name, false)} size="small">
+                        {`${get(outputDatas, `${name}.${outputItemIndex}`, '')}`}
+                      </Spin>
+                    </span>
                   </Space>
-                </p>
+                </div>
               )
             })}
           </Panel>
