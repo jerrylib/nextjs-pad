@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { Input, Button, Row, Col, Divider, Collapse, Tag } from 'antd'
+import { Input, Button, Row, Col, Divider, Collapse, Tag, Spin, Space } from 'antd'
 import { CheckCircleOutlined, LoadingOutlined } from '@ant-design/icons'
 
 // === Utils === //
@@ -123,6 +123,7 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
 
   const [inputDatas, setInputDatas] = useState({})
   const [outputDatas, setOutputDatas] = useState({})
+  const [loadingDatas, setLoadingDatas] = useState({})
 
   const [block, setBlock] = useState()
 
@@ -177,6 +178,10 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
     const abiItem = abiJson[index]
     if (isEmpty(abiItem)) return
     const { name, inputs, outputs } = abiItem
+    setLoadingDatas({
+      ...loadingDatas,
+      [name]: true
+    })
     const web3 = new Web3(rpc)
     const nextParams = map(inputs, (i, inputItemIndex) => {
       return get(inputDatas, `${name}.${inputItemIndex}`, '')
@@ -217,6 +222,12 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
         ...nextOutputDatas
       })
     }
+    setTimeout(() => {
+      setLoadingDatas({
+        ...loadingDatas,
+        [name]: false
+      })
+    }, 1500)
   }
 
   const InputArea = (
@@ -311,10 +322,11 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
   const FunctionArea = (
     <Collapse key={'FunctionArea'}>
       {map(abiJson, (item, index) => {
-        const { name, inputs, outputs, type, payable } = item
+        const { name, inputs, outputs, type, stateMutability } = item
         if (type !== 'function') return
+        const isWriteFun = stateMutability !== 'view' && stateMutability !== 'pure'
         return (
-          <Panel header={`${name} (${payable === true ? 'Write' : 'Read'})`} key={index} collapsible={payable === true ? 'disabled' : ''}>
+          <Panel header={`${name} (${isWriteFun ? 'Write' : 'Read'})`} key={index} collapsible={isWriteFun ? 'disabled' : ''}>
             <Button type="primary" onClick={() => functionCall(index)}>
               call
             </Button>
@@ -339,8 +351,12 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
             {map(outputs, (outputItem, outputItemIndex) => {
               return (
                 <p key={outputItemIndex}>
-                  {`${name}.[${outputItemIndex}] (${outputItem.type})`}=
-                  <span style={{ color: 'red', wordBreak: 'break-all' }}>{`${get(outputDatas, `${name}.${outputItemIndex}`, '')}`}</span>
+                  <Space>
+                    {`${name}.[${outputItemIndex}] (${outputItem.type})`}=
+                    <Spin spinning={get(loadingDatas, name, false)} size="small">
+                      <span style={{ color: 'red', wordBreak: 'break-all' }}>{`${get(outputDatas, `${name}.${outputItemIndex}`, '')}`}</span>
+                    </Spin>
+                  </Space>
                 </p>
               )
             })}
