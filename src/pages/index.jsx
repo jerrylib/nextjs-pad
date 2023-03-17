@@ -17,7 +17,7 @@ export default function Index() {
   const { abiJson, InputArea, FunctionArea } = useContract(defaultRpc, defaultContractAddress, defaultBlockNumber, defaultAbi)
 
   return (
-    <Row gutter={[12, 12]} className="p-4">
+    <Row gutter={[0, 12]} className="p-4">
       <Col span={24}>{InputArea}</Col>
       {abiJson instanceof Error ? (
         <Col span={24}>
