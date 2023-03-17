@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { Input, Button, Row, Col, Divider, Collapse, Tag } from 'antd'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { Input, Button, Row, Col, Divider, Collapse, Tag, Spin, Space } from 'antd'
 import { CheckCircleOutlined, LoadingOutlined } from '@ant-design/icons'
 
 // === Utils === //
@@ -123,6 +123,10 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
 
   const [inputDatas, setInputDatas] = useState({})
   const [outputDatas, setOutputDatas] = useState({})
+  const [loadingDatas, setLoadingDatas] = useState({})
+
+  const [block, setBlock] = useState()
+
   let abiJson = undefined
   try {
     abiJson = JSON.parse(abi)
@@ -130,13 +134,17 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
     abiJson = new Error('abi转换失败')
   }
 
-  const fetchNewestBlockNumber = useCallback(() => {
+  const web3 = useMemo(() => {
     if (isEmpty(rpc)) return
+    return new Web3(new Web3.providers.HttpProvider(rpc))
+  }, [rpc])
+
+  const fetchNewestBlockNumber = useCallback(() => {
+    if (isEmpty(web3)) return
     setFetchLoading(true)
     setBlockNumber(-1)
     const promise = new Promise(resolve => {
       try {
-        const web3 = new Web3(new Web3.providers.HttpProvider(rpc))
         return web3.eth
           .getBlockNumber()
           .catch(() => -1)
@@ -150,17 +158,30 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
         setFetchLoading(false)
       }, 500)
     })
-  }, [rpc])
+  }, [web3])
 
   useEffect(() => {
     if (blockNumber > 0) return
     fetchNewestBlockNumber()
   }, [rpc, blockNumber, fetchNewestBlockNumber])
 
+  useEffect(() => {
+    if (isEmpty(web3)) return
+    if (blockNumber <= 0) return
+    web3.eth
+      .getBlock(`${blockNumber}`)
+      .then(setBlock)
+      .catch(() => setBlock(undefined))
+  }, [web3, blockNumber])
+
   const functionCall = index => {
     const abiItem = abiJson[index]
     if (isEmpty(abiItem)) return
     const { name, inputs, outputs } = abiItem
+    setLoadingDatas({
+      ...loadingDatas,
+      [name]: true
+    })
     const web3 = new Web3(rpc)
     const nextParams = map(inputs, (i, inputItemIndex) => {
       return get(inputDatas, `${name}.${inputItemIndex}`, '')
@@ -201,6 +222,12 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
         ...nextOutputDatas
       })
     }
+    setTimeout(() => {
+      setLoadingDatas({
+        ...loadingDatas,
+        [name]: false
+      })
+    }, 1500)
   }
 
   const InputArea = (
@@ -255,15 +282,20 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
         })}
       </Col>
       <Col span={24}>
-        <Input placeholder="block number" value={blockNumber} onChange={v => setBlockNumber(v.target.value)} />
+        <Input
+          placeholder="block number"
+          value={blockNumber}
+          onChange={v => setBlockNumber(1 * v.target.value)}
+          addonAfter={`Gas Price: ${web3?.utils?.fromWei(`${block?.baseFeePerGas || '0'}`, 'Gwei')} Gwei`}
+        />
         <Tag color={'#1890ff'} style={{ marginTop: '0.5rem', cursor: 'pointer' }} onClick={fetchNewestBlockNumber}>
           {fetchLoading && <LoadingOutlined style={{ marginRight: 10 }} />}
           Newest Block
         </Tag>
-        <Tag color={'#1890ff'} style={{ marginTop: '0.5rem', cursor: 'pointer' }} onClick={() => setBlockNumber(blockNumber + 1)}>
+        <Tag color={'#1890ff'} style={{ marginTop: '0.5rem', cursor: 'pointer' }} onClick={() => setBlockNumber(1 + blockNumber)}>
           + 1
         </Tag>
-        <Tag color={'#1890ff'} style={{ marginTop: '0.5rem', cursor: 'pointer' }} onClick={() => setBlockNumber(blockNumber - 1)}>
+        <Tag color={'#1890ff'} style={{ marginTop: '0.5rem', cursor: 'pointer' }} onClick={() => setBlockNumber(-1 + blockNumber)}>
           - 1
         </Tag>
       </Col>
@@ -318,8 +350,12 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
             {map(outputs, (outputItem, outputItemIndex) => {
               return (
                 <p key={outputItemIndex}>
-                  {`${name}.[${outputItemIndex}] (${outputItem.type})`}=
-                  <span style={{ color: 'red', wordBreak: 'break-all' }}>{`${get(outputDatas, `${name}.${outputItemIndex}`, '')}`}</span>
+                  <Space>
+                    {`${name}.[${outputItemIndex}] (${outputItem.type})`}=
+                    <Spin spinning={get(loadingDatas, name, false)} size="small">
+                      <span style={{ color: 'red', wordBreak: 'break-all' }}>{`${get(outputDatas, `${name}.${outputItemIndex}`, '')}`}</span>
+                    </Spin>
+                  </Space>
                 </p>
               )
             })}
