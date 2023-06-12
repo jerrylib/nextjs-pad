@@ -17,22 +17,22 @@ url = 'https://replit.com/@jerrylib/goodboy?embed=true&edit=true'
 const Ethers = () => {
   return (
     <Row className="w-full p-4">
-      <Col span={24} className="b-1 border-solid b-color-red-400">
+      <Col span={24} className="border border-solid border-red-400">
         <Row>
-          <Col span={12}>
+          <Col span={12} className="p-4">
             章节目录
             <li>章节目录</li>
             <li>章节目录</li>
             <li>章节目录</li>
           </Col>
           <Col span={12}>
-            <iframe className="w-full h-full mt-4 h-64" src={url} frameBorder="0"></iframe>
+            <iframe className="w-full h-64" src={url} frameBorder="0"></iframe>
           </Col>
         </Row>
       </Col>
-      {map(demoArray, item => {
+      {map(demoArray, (item, index) => {
         return (
-          <Col span={24} className="b-1 border-solid border-color-red-400">
+          <Col key={index} span={24} className="border border-solid border-red-400 mt-1">
             {item}
           </Col>
         )

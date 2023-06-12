@@ -7,6 +7,9 @@ import Web3 from 'web3'
 import BigNumber from 'bignumber.js'
 import { get, isEmpty, map, reduce } from 'lodash'
 
+// === Utils === //
+import { ethers } from 'ethers'
+
 // === Constants === //
 import {
   STRATEGY_ABI,
@@ -139,6 +142,11 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
     return new Web3(new Web3.providers.HttpProvider(rpc))
   }, [rpc])
 
+  const etherProvider = useMemo(() => {
+    if (isEmpty(rpc)) return
+    return new ethers.providers.JsonRpcProvider(rpc)
+  }, [rpc])
+
   const fetchNewestBlockNumber = useCallback(() => {
     if (isEmpty(web3)) return
     setFetchLoading(true)
@@ -174,6 +182,11 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
       .catch(() => setBlock(undefined))
   }, [web3, blockNumber])
 
+  /**
+   * view/pure method call based on web3 library
+   * @param {*} index
+   * @returns
+   */
   const functionCall = index => {
     const abiItem = abiJson[index]
     if (isEmpty(abiItem)) return
@@ -213,6 +226,89 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
           return e.message
         })
         .then(nextV => {
+          const nextOutputDatas = reduce(
+            outputs,
+            (rs, outputItem, outputItemIndex) => {
+              if (isEmpty(outputItem.name) || nextV[outputItem.name] === undefined) {
+                rs[`${name}.${outputItemIndex}`] = nextV
+              } else {
+                rs[`${name}.${outputItemIndex}`] = nextV[outputItem.name]
+              }
+              return rs
+            },
+            {}
+          )
+          setOutputDatas({
+            ...outputDatas,
+            ...nextOutputDatas
+          })
+        })
+    } catch (e) {
+      const nextOutputDatas = reduce(
+        outputs,
+        (rs, i, outputItemIndex) => {
+          rs[`${name}.${outputItemIndex}`] = e
+          return rs
+        },
+        {}
+      )
+      setOutputDatas({
+        ...outputDatas,
+        ...nextOutputDatas
+      })
+    }
+    setTimeout(() => {
+      setLoadingDatas({
+        ...loadingDatas,
+        [name]: false
+      })
+    }, 1500)
+  }
+
+  /**
+   * view/pure method call based on ethers library
+   * @param {*} index
+   * @returns
+   */
+  const functionCallForEthers = index => {
+    const abiItem = abiJson[index]
+    if (isEmpty(abiItem)) return
+    const { name, inputs, outputs } = abiItem
+
+    // reset the result
+    const nextOutputDatas = reduce(
+      outputs,
+      (rs, outputItem, outputItemIndex) => {
+        if (isEmpty(outputItem.name) || nextV[outputItem.name] === undefined) {
+          rs[`${name}.${outputItemIndex}`] = ''
+        } else {
+          rs[`${name}.${outputItemIndex}`] = ''
+        }
+        return rs
+      },
+      {}
+    )
+    setOutputDatas({
+      ...outputDatas,
+      ...nextOutputDatas
+    })
+
+    setLoadingDatas({
+      ...loadingDatas,
+      [name]: true
+    })
+    const web3 = new Web3(rpc)
+    const nextParams = map(inputs, (i, inputItemIndex) => {
+      return get(inputDatas, `${name}.${inputItemIndex}`, '')
+    })
+    try {
+      const vaultContract = new ethers.Contract(address, abiJson, etherProvider)
+      vaultContract[name](...nextParams)
+        .catch(e => {
+          return e.message
+        })
+        .then(nextV => {
+          console.log('nextV=', nextV, nextV?.toString(), typeof nextV)
           const nextOutputDatas = reduce(
             outputs,
             (rs, outputItem, outputItemIndex) => {
@@ -349,7 +445,7 @@ const useContract = (defaultRpc, defaultAddress, defaultBlockNumber, defaultAbi)
         const isWriteFun = stateMutability !== 'view' && stateMutability !== 'pure'
         return (
           <Panel header={`${name} (${isWriteFun ? 'Write' : 'Read'})`} key={index} collapsible={isWriteFun ? 'disabled' : ''}>
-            <Button type="primary" onClick={() => functionCall(index)}>
+            <Button type="primary" onClick={() => functionCallForEthers(index)}>
               call
             </Button>
             {!isEmpty(inputs) && <Divider orientation="left">Inputs</Divider>}
