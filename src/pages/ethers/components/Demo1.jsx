@@ -47,7 +47,7 @@ const Demo1 = () => {
           BigNumber
         </Descriptions.Item>,
         <Descriptions.Item key="value" label="value">
-          {JSON.stringify(v, undefined, 4)}
+          {JSON.stringify(v)}
         </Descriptions.Item>,
         <Descriptions.Item key="toString" label="toString()">
           {v?.toString()}
